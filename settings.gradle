@@ -1,0 +1,5 @@
+rootProject.name = "ezPDFEditorAViewLibDev"
+include ':app', 'ezPDFEditorAViewLib', 'ezPDFEditorAViewLibAll', 'xlib'
+project(':ezPDFEditorAViewLib').projectDir=new File('../ezPDFEditorAViewLib/app')
+project(':ezPDFEditorAViewLibAll').projectDir=new File('../ezPDFEditorAViewLib')
+project(':xlib').projectDir=new File('../ezPDFEditorXLib')
