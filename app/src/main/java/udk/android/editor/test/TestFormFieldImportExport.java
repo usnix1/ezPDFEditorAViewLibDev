@@ -10,10 +10,10 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.StringWriter;
 
-import udk.android.editor.env.LibConfiguration;
-import udk.android.editor.view.pdf.PDFView;
-import udk.android.editor.view.pdf.PDFViewAdapter;
-import udk.android.editor.view.pdf.PDFViewEvent;
+import udk.android.reader.env.LibConfiguration;
+import udk.android.reader.view.pdf.PDFView;
+import udk.android.reader.view.pdf.PDFViewAdapter;
+import udk.android.reader.view.pdf.PDFViewEvent;
 import udk.android.util.FileUtil;
 import udk.android.util.IOUtil;
 import udk.android.util.LogUtil;

@@ -3,8 +3,8 @@ package udk.android.editor.test;
 import android.os.Bundle;
 import android.view.View;
 
-import udk.android.editor.pdf.PackagedPDFDocumentRequestBuilder;
-import udk.android.editor.view.pdf.PDFView;
+import udk.android.reader.pdf.PackagedPDFDocumentRequestBuilder;
+import udk.android.reader.view.pdf.PDFView;
 import udk.android.util.LogUtil;
 import udk.android.util.Workable;
 

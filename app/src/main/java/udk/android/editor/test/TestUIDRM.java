@@ -16,10 +16,10 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import udk.android.editor.env.LibConfiguration;
-import udk.android.editor.pdf.ExtraOpenOptions;
-import udk.android.editor.view.pdf.PDFView;
-import udk.android.editor.view.pdf.ui.PDFUIView;
+import udk.android.reader.env.LibConfiguration;
+import udk.android.reader.pdf.ExtraOpenOptions;
+import udk.android.reader.view.pdf.PDFView;
+import udk.android.reader.view.pdf.ui.PDFUIView;
 import udk.android.util.Workable;
 
 /**

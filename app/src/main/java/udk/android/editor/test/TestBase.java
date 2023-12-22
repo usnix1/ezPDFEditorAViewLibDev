@@ -13,8 +13,8 @@ import android.widget.RelativeLayout;
 
 import java.io.File;
 
-import udk.android.editor.env.LibConfiguration;
-import udk.android.editor.view.pdf.PDFView;
+import udk.android.reader.env.LibConfiguration;
+import udk.android.reader.view.pdf.PDFView;
 import udk.android.util.LogUtil;
 import udk.android.util.Workable;
 
@@ -101,8 +101,8 @@ public abstract class TestBase extends Activity{
 		
 		LibConfiguration.USE_FORM = true;
 		LibConfiguration.ENABLE_DIRECT_USER_INPUT = true;
-		LibConfiguration.USE_SIGNATURE_TOOLKIT = true;
-		LibConfiguration.USE_SIGNATURE_NPKI = true;
+		//LibConfiguration.USE_SIGNATURE_TOOLKIT = true;
+		//LibConfiguration.USE_SIGNATURE_NPKI = true;
 		LibConfiguration.USE_SIGNATURE_INNER_HANDLING = true;
 		LibConfiguration.USE_SCRAP = true;
 		LibConfiguration.USE_PAGE_TRANSFORM = true;

@@ -13,10 +13,10 @@ import android.widget.RelativeLayout;
 
 import java.io.File;
 
-import udk.android.editor.env.LibConfiguration;
-import udk.android.editor.pdf.ExtraOpenOptions;
-import udk.android.editor.view.pdf.PDFView;
-import udk.android.pdfedidtorlib.R;
+import udk.android.reader.env.LibConfiguration;
+import udk.android.reader.pdf.ExtraOpenOptions;
+import udk.android.reader.view.pdf.PDFView;
+import udk.android.pdfreaderlib.R;
 import udk.android.util.AssignChecker;
 import udk.android.widget.Alerter;
 

@@ -1,10 +1,11 @@
-package udk.android.editor.test;
+	package udk.android.editor.test;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,9 +18,13 @@ import android.view.View;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
@@ -28,19 +33,19 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
-import udk.android.editor.env.LibConfiguration;
-import udk.android.editor.env.LibLog;
-import udk.android.editor.pdf.annotation.Annotation;
-import udk.android.editor.pdf.annotation.AnnotationEvent;
-import udk.android.editor.pdf.annotation.AnnotationListener;
-import udk.android.editor.pdf.annotation.InkAnnotation;
-import udk.android.editor.pdf.annotation.ModifiedCallback;
-import udk.android.editor.view.pdf.GlobalConfigurationService;
-import udk.android.editor.view.pdf.PDFView;
-import udk.android.editor.view.pdf.PDFViewEvent;
-import udk.android.editor.view.pdf.PDFViewListener;
-import udk.android.editor.view.pdf.menu.ToolMenuCommandFactory;
-import udk.android.pdfedidtorlib.dev.BuildConfig;
+import udk.android.reader.env.LibConfiguration;
+import udk.android.reader.env.LibLog;
+import udk.android.reader.pdf.TextParagraph;
+import udk.android.reader.pdf.annotation.Annotation;
+import udk.android.reader.pdf.annotation.AnnotationEvent;
+import udk.android.reader.pdf.annotation.AnnotationListener;
+import udk.android.reader.pdf.annotation.InkAnnotation;
+import udk.android.reader.pdf.annotation.ModifiedCallback;
+import udk.android.reader.view.pdf.GlobalConfigurationService;
+import udk.android.reader.view.pdf.PDFView;
+import udk.android.reader.view.pdf.PDFViewEvent;
+import udk.android.reader.view.pdf.PDFViewListener;
+import udk.android.pdfeditorlib.dev.BuildConfig;
 import udk.android.util.LogUtil;
 import udk.android.util.Workable;
 import udk.android.util.vo.menu.MenuCommand;
@@ -130,7 +135,7 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 				LibConfiguration.CONTINUOUS_SCROLL_TYPE = LibConfiguration.CONTINUOUS_SCROLL_TYPE_NONE;
 				LibConfiguration.CONTINUOUS_SCROLL_SEAMLESS = true;
 				LibConfiguration.CONTINUOUS_SCROLL_PAGE_TERM_AUTO = true;
-
+				LibConfiguration.USE_ANNOTATION_EFFCET_CLOUDY = true;
 
 
 				LibConfiguration.AUDIO_PLAY_WITH_TEXT_HIGHLIGHT = true;
@@ -236,55 +241,41 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 				mcs.add( new MenuCommand( "테스트1", new Runnable(){
 					@Override
 					public void run(){
-						//Bitmap bitmap = BitmapFactory.decodeFile("/sdcard/RD_223_7.1504693_1373_2405.jpg");
-						//pdfView.addAnnotationImage(bitmap, new Rect(0,0, bitmap.getWidth(), bitmap.getHeight()), new RectF(0,0, bitmap.getWidth()/2, bitmap.getHeight()/2));
-						//pdfView.addAnnotationImageStart("/sdcard/test.png");
-						//tc = ToolMenuCommandFactory.forAnnotationCreateImageSpenDraw( pdfView );
-						//tc.getAction().run();
-
-						String[] files = new String[]{"/sdcard/111.pdf", "/sdcard/222.pdf"};
-						pdfView.getPDF().mergeFiles(files, "title", "/sdcard/1234.pdf");
+						//RectF rectF = pdfView.getPageBounds();
+						//pdfView.addAnnotationFreehandStart(true, rectF); // pageBounds에만 필기 주석 시작
+						List<TextParagraph> list = pdfView.getTextParagraphList(pdfView.getPage());
+						if( list != null && !list.isEmpty()){
+							for( TextParagraph tp : list ){
+								Log.e("XXX", "Text:" + tp.getText());
+							}
+						}
 					}//method
 				} ) );
 				mcs.add( new MenuCommand( "테스트2", new Runnable(){
 					@Override
 					public void run(){
-						/*
-						if( pdfView != null ) {
-
-								try {
-									StringWriter sw = new StringWriter();
-									pdfView.exportXFDF(sw);
-									String xfdf = sw.toString();
-									if (xfdf.isEmpty() == false) {
-										Log.e("XXX", "export : " + xfdf);
-										byteXfdf = xfdf.getBytes(StandardCharsets.UTF_8);
-									}
-								} catch ( Exception e ){
-
-								}
-						}
-						 */
-						tc.getSubmenus().onDeactivate();
+						Log.e("XXX","count: " + pdfView.getSelectedText());
 					}//method
 				} ) );
 				mcs.add( new MenuCommand( "테스트3", new Runnable(){
 					@Override
-					public void run(){
-						try {
-							if (byteXfdf != null && byteXfdf.length > 0) {
-								pdfView.importXFDF(byteXfdf);
-							}
-						} catch (Exception e ){
+					public void run()
+					{
+						pdfView.addAnnotationFreehandEndConfirm();
 
-						}
 					}//method
 				} ) );
 
 				mcs.add( new MenuCommand( "테스트4", new Runnable(){
 					@Override
 					public void run(){
-							pdfView.save();
+						try {
+							FileInputStream fis = new FileInputStream("/sdcard/imageAA.xml");
+							pdfView.importXFDF(fis);
+							fis.close();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 
 					}
 				} ) );
@@ -292,17 +283,13 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 				mcs.add( new MenuCommand( "이전페이지", new Runnable(){
 					@Override
 					public void run(){
-
-						LibConfiguration.ANNOTATION_SUBJECT_FREEHAND_CUSTOM = "AAA";
-						pdfView.addAnnotationFreehandStart();
-
+						pdfView.prevPage();
 					}
 				} ) );
 				mcs.add( new MenuCommand( "다음페이지", new Runnable(){
 					@Override
 					public void run(){
-
-						pdfView.addAnnotationFreehandEndConfirm();
+						pdfView.nextPage();
 					}
 				} ) );
 				mcs.add( new MenuCommand( "페이지 리셋", new Runnable(){
@@ -317,7 +304,39 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 
 			}//method
 		};
-	}//method                                
+	}//method
+
+	private void BitmapConvertFile(Bitmap bitmap, String strFilePath)
+	{
+		// 파일 선언 -> 경로는 파라미터에서 받는다
+		File file = new File(strFilePath);
+
+		// OutputStream 선언 -> bitmap데이터를 OutputStream에 받아 File에 넣어주는 용도
+		OutputStream out = null;
+		try {
+			// 파일 초기화
+			file.createNewFile();
+
+			// OutputStream에 출력될 Stream에 파일을 넣어준다
+			out = new FileOutputStream(file);
+
+			// bitmap 압축
+			bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				out.flush();
+				out.close();
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	MediaSubtitleService ms;
 	private View bg;
 	@Override
@@ -471,6 +490,7 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 		});
 
 		pdfView.getAnnotationService().addListener(this);
+		pdfView.setContinuousAudioPlayMode(true);
 
 		try {
 
@@ -483,7 +503,7 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 */
 			//pdfView.openPDF( "/sdcard/test/ezPDF Webviewer_매뉴얼.pdf", "abcd123!", "abcd123!", 0, 1, true, null );
 			///pdfView.openPDF("/sdcard/test/ezPDF Webviewer_매뉴얼.pdf", "abcd123!", "abcd123!", 1, 1, true, null, null);
-			pdfView.openPDF("/sdcard/sample.pdf", 1 );
+			pdfView.openPDF("/sdcard/test/나무매뉴얼 카티아 예제집 1번.pdf", 1 );
 
 //			pdfView.openPDF(getAssets().open("C01_4.PDF"), 0);
 		} catch ( Exception e ){
@@ -531,8 +551,7 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 
 	@Override
 	public void onAnnotationRemoved(AnnotationEvent e) {
-		LogUtil.d( "removed nm=" + e.current.getNm() );
-		ra = e.current;
+
 	}
 
 	@Override

@@ -7,9 +7,9 @@ import android.view.View;
 
 import java.io.File;
 
-import udk.android.editor.env.LibConfiguration;
-import udk.android.editor.view.pdf.PDFView;
-import udk.android.pdfedidtorlib.R;
+import udk.android.reader.env.LibConfiguration;
+import udk.android.reader.view.pdf.PDFView;
+import udk.android.pdfreaderlib.R;
 import udk.android.util.Workable;
 
 public class TestTemp extends TestBase{

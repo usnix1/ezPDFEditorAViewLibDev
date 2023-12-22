@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
-import udk.android.editor.env.LibConfiguration;
-import udk.android.editor.view.pdf.ui.PDFUIView;
+import udk.android.reader.env.LibConfiguration;
+import udk.android.reader.view.pdf.ui.PDFUIView;
 import udk.android.util.Workable;
 
 /**

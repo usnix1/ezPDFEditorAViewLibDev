@@ -3,7 +3,7 @@ package udk.android.editor.test;
 import android.os.Bundle;
 import android.view.View;
 
-import udk.android.editor.env.LibConfiguration;
+import udk.android.reader.env.LibConfiguration;
 import udk.android.util.Workable;
 
 /**

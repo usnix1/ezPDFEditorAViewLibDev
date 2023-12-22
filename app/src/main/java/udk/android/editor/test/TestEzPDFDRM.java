@@ -17,9 +17,9 @@ import java.util.UUID;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 
-import udk.android.editor.env.LibConfiguration;
-import udk.android.editor.pdf.ExtraOpenOptions;
-import udk.android.editor.view.pdf.PDFView;
+import udk.android.reader.env.LibConfiguration;
+import udk.android.reader.pdf.ExtraOpenOptions;
+import udk.android.reader.view.pdf.PDFView;
 import udk.android.util.IOUtil;
 import udk.android.util.LogUtil;
 import udk.android.util.Workable;

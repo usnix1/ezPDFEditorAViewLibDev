@@ -10,10 +10,10 @@ import android.widget.RelativeLayout;
 
 import java.util.Properties;
 
-import udk.android.editor.env.LibConfiguration;
-import udk.android.editor.env.LibConstant;
-import udk.android.editor.view.pdf.PDFView;
-import udk.android.editor.view.pdf.ui.PDFUIView;
+import udk.android.reader.env.LibConfiguration;
+import udk.android.reader.env.LibConstant;
+import udk.android.reader.view.pdf.PDFView;
+import udk.android.reader.view.pdf.ui.PDFUIView;
 import udk.android.util.LogUtil;
 import udk.android.util.Workable;
 

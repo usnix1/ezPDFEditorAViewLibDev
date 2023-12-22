@@ -7,10 +7,10 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import udk.android.editor.pdf.TextParagraph;
-import udk.android.editor.view.pdf.PDFView;
-import udk.android.editor.view.pdf.PDFViewAdapter;
-import udk.android.editor.view.pdf.PDFViewEvent;
+import udk.android.reader.pdf.TextParagraph;
+import udk.android.reader.view.pdf.PDFView;
+import udk.android.reader.view.pdf.PDFViewAdapter;
+import udk.android.reader.view.pdf.PDFViewEvent;
 import udk.android.util.Workable;
 
 /**

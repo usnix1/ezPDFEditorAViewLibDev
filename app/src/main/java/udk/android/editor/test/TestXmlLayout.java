@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
-import udk.android.editor.view.pdf.PDFView;
+import udk.android.reader.view.pdf.PDFView;
 import udk.android.util.LogUtil;
 
 public class TestXmlLayout extends Activity{

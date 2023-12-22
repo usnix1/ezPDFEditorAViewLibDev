@@ -8,9 +8,9 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 
-import udk.android.editor.env.LibConfiguration;
-import udk.android.editor.pdf.EDDataProvider;
-import udk.android.editor.view.pdf.PDFView;
+import udk.android.reader.env.LibConfiguration;
+import udk.android.reader.pdf.EDDataProvider;
+import udk.android.reader.view.pdf.PDFView;
 import udk.android.util.Workable;
 import udk.android.widget.Alerter;
 

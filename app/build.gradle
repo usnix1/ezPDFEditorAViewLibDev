@@ -5,7 +5,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "udk.android.pdfedidtorlib.dev"
+        applicationId "udk.android.pdfeditorlib.dev"
         minSdk 26
         targetSdk 33
         versionCode 1

@@ -4,11 +4,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
-import udk.android.editor.env.LibConfiguration;
-import udk.android.editor.view.pdf.GlobalConfigurationService;
-import udk.android.editor.view.pdf.PDFView;
-import udk.android.editor.view.pdf.PDFViewFormEvent;
-import udk.android.editor.view.pdf.PDFViewFormListener;
+import udk.android.reader.env.LibConfiguration;
+import udk.android.reader.view.pdf.GlobalConfigurationService;
+import udk.android.reader.view.pdf.PDFView;
+import udk.android.reader.view.pdf.PDFViewFormEvent;
+import udk.android.reader.view.pdf.PDFViewFormListener;
 import udk.android.util.LogUtil;
 import udk.android.util.Workable;
 import udk.android.widget.Alerter;

@@ -6,9 +6,9 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import udk.android.editor.pdf.action.MediaSubtitleInfo;
-import udk.android.editor.pdf.action.PlayableMediaInfo;
-import udk.android.editor.view.pdf.PDFView;
+import udk.android.reader.pdf.action.MediaSubtitleInfo;
+import udk.android.reader.pdf.action.PlayableMediaInfo;
+import udk.android.reader.view.pdf.PDFView;
 import udk.android.util.ThreadUtil;
 import udk.android.util.Workable;
 

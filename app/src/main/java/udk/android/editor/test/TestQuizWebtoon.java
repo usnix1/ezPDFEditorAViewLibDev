@@ -11,12 +11,12 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import udk.android.editor.env.LibConfiguration;
-import udk.android.editor.view.BannerView;
-import udk.android.editor.view.pdf.GlobalConfigurationService;
-import udk.android.editor.view.pdf.PDFView;
-import udk.android.editor.view.pdf.PDFViewEvent;
-import udk.android.editor.view.pdf.PDFViewListenerEx;
+import udk.android.reader.env.LibConfiguration;
+import udk.android.reader.view.BannerView;
+import udk.android.reader.view.pdf.GlobalConfigurationService;
+import udk.android.reader.view.pdf.PDFView;
+import udk.android.reader.view.pdf.PDFViewEvent;
+import udk.android.reader.view.pdf.PDFViewListenerEx;
 import udk.android.util.LogUtil;
 import udk.android.util.Workable;
 import udk.android.util.vo.menu.MenuCommand;

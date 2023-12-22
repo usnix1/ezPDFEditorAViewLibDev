@@ -8,10 +8,10 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-import udk.android.editor.env.LibConfiguration;
-import udk.android.editor.view.pdf.GlobalConfigurationService;
-import udk.android.editor.view.pdf.PDFView;
-import udk.android.pdfedidtorlib.R;
+import udk.android.reader.env.LibConfiguration;
+import udk.android.reader.view.pdf.GlobalConfigurationService;
+import udk.android.reader.view.pdf.PDFView;
+import udk.android.pdfreaderlib.R;
 import udk.android.util.Workable;
 import udk.android.util.vo.menu.MenuCommand;
 import udk.android.widget.WidgetFactory;

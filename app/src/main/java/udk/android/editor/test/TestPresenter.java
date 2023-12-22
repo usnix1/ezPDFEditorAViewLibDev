@@ -11,12 +11,12 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import udk.android.editor.env.LibConfiguration;
-import udk.android.editor.pdf.PDFEvent;
-import udk.android.editor.pdf.PresenterService;
-import udk.android.editor.pdf.PresenterService.PresenterServiceListener;
-import udk.android.editor.view.pdf.PDFView;
-import udk.android.editor.view.pdf.PDFView.OnViewKeyPreImeListener;
+import udk.android.reader.env.LibConfiguration;
+import udk.android.reader.pdf.PDFEvent;
+import udk.android.reader.pdf.PresenterService;
+import udk.android.reader.pdf.PresenterService.PresenterServiceListener;
+import udk.android.reader.view.pdf.PDFView;
+import udk.android.reader.view.pdf.PDFView.OnViewKeyPreImeListener;
 import udk.android.util.LogUtil;
 import udk.android.util.Workable;
 
@@ -115,7 +115,7 @@ public class TestPresenter extends TestBase {
 		pdfView.setFocusable(true);
 		pdfView.requestFocus();
 		pdfView.setDoublePageViewing(true);
-		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(pdfView.getWindowToken(), 0);
 
 		psrv = pdfView.getPresenterService();

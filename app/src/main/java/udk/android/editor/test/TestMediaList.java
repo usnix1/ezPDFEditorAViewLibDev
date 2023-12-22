@@ -8,11 +8,11 @@ import android.widget.RelativeLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import udk.android.editor.pdf.annotation.Annotation;
-import udk.android.editor.view.pdf.AnnotationListView;
-import udk.android.editor.view.pdf.AttachedFileListView;
-import udk.android.editor.view.pdf.PDFMediaListView;
-import udk.android.editor.view.pdf.PDFView;
+import udk.android.reader.pdf.annotation.Annotation;
+import udk.android.reader.view.pdf.AnnotationListView;
+import udk.android.reader.view.pdf.AttachedFileListView;
+import udk.android.reader.view.pdf.PDFMediaListView;
+import udk.android.reader.view.pdf.PDFView;
 import udk.android.util.StateObject;
 import udk.android.util.Workable;
 import udk.android.util.vo.menu.MenuCommand;

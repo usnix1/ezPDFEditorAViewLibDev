@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import udk.android.drm.DRMService;
-import udk.android.editor.env.LibConfiguration;
-import udk.android.editor.view.pdf.PDFView;
+import udk.android.reader.env.LibConfiguration;
+import udk.android.reader.view.pdf.PDFView;
 import udk.android.util.ProcessCallback;
 import udk.android.util.Workable;
 import udk.android.widget.Alerter;

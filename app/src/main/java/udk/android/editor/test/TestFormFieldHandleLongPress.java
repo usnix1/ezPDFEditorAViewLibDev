@@ -9,10 +9,10 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-import udk.android.editor.pdf.selection.RectangleSelection;
-import udk.android.editor.view.pdf.PDFView;
-import udk.android.editor.view.pdf.PDFViewEvent;
-import udk.android.editor.view.pdf.PDFViewListener;
+import udk.android.reader.pdf.selection.RectangleSelection;
+import udk.android.reader.view.pdf.PDFView;
+import udk.android.reader.view.pdf.PDFViewEvent;
+import udk.android.reader.view.pdf.PDFViewListener;
 import udk.android.util.Workable;
 import udk.android.util.vo.menu.MenuCommand;
 import udk.android.widget.WidgetFactory;

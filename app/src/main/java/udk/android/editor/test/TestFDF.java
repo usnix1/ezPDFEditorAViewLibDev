@@ -7,11 +7,11 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-import udk.android.editor.env.LibConfiguration;
-import udk.android.editor.view.pdf.GlobalConfigurationService;
-import udk.android.editor.view.pdf.PDFView;
-import udk.android.editor.view.pdf.PDFViewAdapter;
-import udk.android.editor.view.pdf.PDFViewEvent;
+import udk.android.reader.env.LibConfiguration;
+import udk.android.reader.view.pdf.GlobalConfigurationService;
+import udk.android.reader.view.pdf.PDFView;
+import udk.android.reader.view.pdf.PDFViewAdapter;
+import udk.android.reader.view.pdf.PDFViewEvent;
 import udk.android.util.Workable;
 import udk.android.util.vo.menu.MenuCommand;
 import udk.android.widget.WidgetFactory;
