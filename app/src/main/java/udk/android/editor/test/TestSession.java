@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 
 import udk.android.reader.env.LibConfiguration;
 import udk.android.reader.view.pdf.PDFView;
-import udk.android.pdfreaderlib.R;
+import udk.android.pdfviewlib.R;
 import udk.android.util.LogUtil;
 
 public class TestSession extends Activity{

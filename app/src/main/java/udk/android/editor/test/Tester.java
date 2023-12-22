@@ -16,7 +16,7 @@ import java.io.File;
 import udk.android.reader.env.LibConfiguration;
 import udk.android.reader.pdf.ExtraOpenOptions;
 import udk.android.reader.view.pdf.PDFView;
-import udk.android.pdfreaderlib.R;
+import udk.android.pdfviewlib.R;
 import udk.android.util.AssignChecker;
 import udk.android.widget.Alerter;
 
