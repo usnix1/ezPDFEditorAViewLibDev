@@ -18,6 +18,7 @@ import android.view.View;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -25,6 +26,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
@@ -32,9 +37,12 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
+import udk.android.pdfeditorlib.dev.R;
 import udk.android.reader.env.LibConfiguration;
 import udk.android.reader.env.LibLog;
+import udk.android.reader.pdf.PDFException;
 import udk.android.reader.pdf.TextParagraph;
 import udk.android.reader.pdf.annotation.Annotation;
 import udk.android.reader.pdf.annotation.AnnotationEvent;
@@ -42,10 +50,12 @@ import udk.android.reader.pdf.annotation.AnnotationListener;
 import udk.android.reader.pdf.annotation.InkAnnotation;
 import udk.android.reader.pdf.annotation.ModifiedCallback;
 import udk.android.reader.view.pdf.GlobalConfigurationService;
+import udk.android.reader.view.pdf.PDFReadingService;
 import udk.android.reader.view.pdf.PDFView;
 import udk.android.reader.view.pdf.PDFViewEvent;
 import udk.android.reader.view.pdf.PDFViewListener;
 import udk.android.pdfeditorlib.dev.BuildConfig;
+import udk.android.reader.view.pdf.PDFViewListenerEx;
 import udk.android.util.LogUtil;
 import udk.android.util.Workable;
 import udk.android.util.vo.menu.MenuCommand;
@@ -123,9 +133,9 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 				//LibConfiguration.DEBUGDRAW = true;
 				LibConfiguration.USER_LOG_LEVEL = LibConfiguration.USER_LOG_LEVEL_NONE;
 				LibConfiguration.USE_QUIZ = true;
-//				LibConfiguration.USE_DOUBLE_PAGE_VIEWING = true;
-//				LibConfiguration.DOUBLE_PAGE_VIEWING = true;
-//				LibConfiguration.DOUBLE_PAGE_COVER_EXISTS = true;
+				LibConfiguration.USE_DOUBLE_PAGE_VIEWING = true;
+				LibConfiguration.DOUBLE_PAGE_VIEWING = true;
+				LibConfiguration.DOUBLE_PAGE_COVER_EXISTS = false;
 
 				LibConfiguration.ZOOM_MAX = 16.0f;
 				LibConfiguration.ENABLE_USERACTION_DOUBLETAP = false;
@@ -197,12 +207,17 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 
 				LibConfiguration.USE_ANNOTATION_CREATE_IMAGE_EXTRA_PNG = true;
 				LibConfiguration.XFDF_STAMP_INCLUDE_IMAGE_DATA = true;
+
+				LibConfiguration.BETA_FREEHAND_DRAWING_CALLBACK_IN_DOUBLEPAGE_VIEWING = true;
+
 				GlobalConfigurationService gs = GlobalConfigurationService.getInstance();
 				gs.setEbookMode(false);
 				gs.setContinuousScrollMode(1);
 				gs.setContinuousScrollAutoPageInterval(true);
 				gs.setCacheEnabled(false);
 				gs.setFittingMode(3);
+
+//				LibConfiguration.USE_TTS = true;
 			}//method
 		};
 	}//method
@@ -238,43 +253,102 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 			public void work( View tool ){
 
 				List< MenuCommand > mcs = new ArrayList< MenuCommand >();
-				mcs.add( new MenuCommand( "테스트1", new Runnable(){
+				mcs.add( new MenuCommand( "테스트1 - create", new Runnable(){
 					@Override
 					public void run(){
 						//RectF rectF = pdfView.getPageBounds();
 						//pdfView.addAnnotationFreehandStart(true, rectF); // pageBounds에만 필기 주석 시작
-						List<TextParagraph> list = pdfView.getTextParagraphList(pdfView.getPage());
-						if( list != null && !list.isEmpty()){
-							for( TextParagraph tp : list ){
-								Log.e("XXX", "Text:" + tp.getText());
-							}
-						}
+						//pdfView.addAnnotationTextBoxStart();
+						pdfView.addAnnotationFreehandStart();
+						//pdfView.addAnnotationRectangleStart();
+						//pdfView.addAnnotationLineStart();
+						//pdfView.addAnnotationOvalStart();
+						//pdfView.addAnnotationPolygonStart(5);
 					}//method
 				} ) );
-				mcs.add( new MenuCommand( "테스트2", new Runnable(){
+				mcs.add( new MenuCommand( "테스트1 - end", new Runnable(){
 					@Override
 					public void run(){
-						Log.e("XXX","count: " + pdfView.getSelectedText());
+
+						if( pdfView.addAnnotationFreehandCanUndo()){
+							pdfView.addAnnotationFreehandEndConfirm();
+						} else {
+							pdfView.addAnnotationFreehandEndCancel();
+						}
+
 					}//method
 				} ) );
-				mcs.add( new MenuCommand( "테스트3", new Runnable(){
+				mcs.add( new MenuCommand( "테스트1 - clear start", new Runnable(){
 					@Override
-					public void run()
-					{
-						pdfView.addAnnotationFreehandEndConfirm();
-
+					public void run(){
+						pdfView.clearAnnotationStart();
 					}//method
 				} ) );
-
-				mcs.add( new MenuCommand( "테스트4", new Runnable(){
+				mcs.add( new MenuCommand( "테스트1 - clear end", new Runnable(){
+					@Override
+					public void run(){
+						pdfView.clearAnnotationEnd();
+					}//method
+				} ) );
+				mcs.add( new MenuCommand( "테스트1 - flatten", new Runnable(){
 					@Override
 					public void run(){
 						try {
-							FileInputStream fis = new FileInputStream("/sdcard/imageAA.xml");
-							pdfView.importXFDF(fis);
-							fis.close();
-						} catch (Exception e) {
+							pdfView.flatten();
+						} catch (PDFException e) {
 							e.printStackTrace();
+						}
+					}//method
+				} ) );
+				mcs.add( new MenuCommand( "테스트2 - delete", new Runnable(){
+					@Override
+					public void run(){
+						pdfView.deleteAllAnnotation();
+					}//method
+				} ) );
+				mcs.add( new MenuCommand( "테스트2- rotate", new Runnable(){
+					@Override
+					public void run(){
+						int rotate = pdfView.getCurrentPageRotate() + 90;
+						pdfView.rotateCurrentPage(rotate);
+					}//method
+				} ) );
+				mcs.add( new MenuCommand( "테스트2- save", new Runnable(){
+					@Override
+					public void run(){
+						pdfView.save();
+					}//method
+				} ) );
+				mcs.add( new MenuCommand( "테스트3 - export", new Runnable(){
+					@Override
+					public void run()
+					{
+						try {
+							StringWriter value = new StringWriter();
+							pdfView.exportXFDF(value);
+							byteXfdf = value.toString().getBytes(StandardCharsets.UTF_8);
+
+						} catch (Exception e ){
+
+						}
+
+					}//method
+				} ) );
+
+				mcs.add( new MenuCommand( "테스트4 - import", new Runnable(){
+					@Override
+					public void run(){
+						if( byteXfdf == null )
+							byteXfdf = readFromFile("/sdcard/test.xfdf");
+
+						if( byteXfdf != null && byteXfdf.length > 0){
+							try {
+								pdfView.importXFDF(byteXfdf);
+							} catch (Exception e){
+
+							}
+
+							byteXfdf = null;
 						}
 
 					}
@@ -295,9 +369,7 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 				mcs.add( new MenuCommand( "페이지 리셋", new Runnable(){
 					@Override
 					public void run(){
-
 						pdfView.resetPage(pdfView.getPage());
-
 					}
 				} ) );
 				WidgetFactory.uiPopupMenu( tool, mcs );
@@ -335,6 +407,22 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private byte[] readFromFile(String path){
+			FileInputStream fis = null;
+			try {
+				fis = new FileInputStream(path);
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				byte[] b = new byte[1024];
+				for (int readNum; (readNum = fis.read(b)) != -1; ) {
+					bos.write(b, 0, readNum);
+				}
+				return bos.toByteArray();
+			} catch (Exception e) {
+
+			}
+			return null;
 	}
 
 	MediaSubtitleService ms;
@@ -432,6 +520,7 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 	}
 
 	private void openPDF() {
+
 		pdfView.setPDFViewListener(new PDFViewListener() {
 			@Override
 			public void onOpenCompleted(PDFViewEvent e) {
@@ -455,7 +544,6 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 
 			@Override
 			public void onSingleTapUp(PDFViewEvent e) {
-				Log.e("XXXX", "onSingleTapUp" + e.motionEvent.getX() + ", " + e.motionEvent.getY());
 			}
 
 			@Override
@@ -489,6 +577,70 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 			}
 		});
 
+		pdfView.setOnAnnotationFreehandCreatingListener(new PDFView.OnAnnotationFreehandCreatingListener() {
+			@Override
+			public void onStart(int page, String uid) {
+
+			}
+
+			@Override
+			public void onNewLineStart() {
+
+			}
+
+			@Override
+			public void onNewLine(String xfdf) {
+				if( pdfView.addAnnotationFreehandCanUndo()){
+					pdfView.addAnnotationFreehandEndConfirm();
+				} else {
+					pdfView.addAnnotationFreehandEndCancel();
+				}
+			}
+
+			@Override
+			public void onUndo(String xfdf) {
+
+			}
+
+			@Override
+			public void onRedo(String xfdf) {
+
+			}
+
+			@Override
+			public void onEndConfirm(String xfdf) {
+				pdfView.addAnnotationFreehandStart();
+			}
+
+			@Override
+			public void onEndCancel(int page, String uid) {
+
+			}
+		});
+
+		/*
+		pdfView.setPDFViewListenerEx(new PDFViewListenerEx() {
+			@Override
+			public void onPageChangeTried(PDFViewEvent e) {
+				if(pdfView.addAnnotationFreehandCanUndo()) {
+					pdfView.addAnnotationFreehandEndConfirm(new Runnable() {
+						@Override
+						public void run() {
+							pdfView.addAnnotationFreehandStart();
+						}
+					});
+				} else
+					pdfView.addAnnotationFreehandEndCancel();
+			}
+		});
+
+		pdfView.setOnViewPageChangeListener(new PDFView.OnViewPageChangeListener() {
+			@Override
+			public void onViewPageChange(int page) {
+
+			}
+		});
+		 */
 		pdfView.getAnnotationService().addListener(this);
 		pdfView.setContinuousAudioPlayMode(true);
 
@@ -503,7 +655,7 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 */
 			//pdfView.openPDF( "/sdcard/test/ezPDF Webviewer_매뉴얼.pdf", "abcd123!", "abcd123!", 0, 1, true, null );
 			///pdfView.openPDF("/sdcard/test/ezPDF Webviewer_매뉴얼.pdf", "abcd123!", "abcd123!", 1, 1, true, null, null);
-			pdfView.openPDF("/sdcard/test/나무매뉴얼 카티아 예제집 1번.pdf", 1 );
+			pdfView.openPDF("/sdcard/sample.pdf", 1 );
 
 //			pdfView.openPDF(getAssets().open("C01_4.PDF"), 0);
 		} catch ( Exception e ){
