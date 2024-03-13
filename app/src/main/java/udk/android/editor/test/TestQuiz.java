@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Build;
@@ -42,21 +43,29 @@ import java.util.Locale;
 import udk.android.pdfeditorlib.dev.R;
 import udk.android.reader.env.LibConfiguration;
 import udk.android.reader.env.LibLog;
+import udk.android.reader.lib.PDFLibrary;
+import udk.android.reader.pdf.ExtraOpenOptions;
 import udk.android.reader.pdf.PDFException;
 import udk.android.reader.pdf.TextParagraph;
 import udk.android.reader.pdf.annotation.Annotation;
 import udk.android.reader.pdf.annotation.AnnotationEvent;
 import udk.android.reader.pdf.annotation.AnnotationListener;
+import udk.android.reader.pdf.annotation.AnnotationService;
+import udk.android.reader.pdf.annotation.ClosedFigureAnnotation;
 import udk.android.reader.pdf.annotation.InkAnnotation;
 import udk.android.reader.pdf.annotation.ModifiedCallback;
 import udk.android.reader.view.pdf.GlobalConfigurationService;
+import udk.android.reader.view.pdf.InteractionScrollListener;
 import udk.android.reader.view.pdf.PDFReadingService;
 import udk.android.reader.view.pdf.PDFView;
 import udk.android.reader.view.pdf.PDFViewEvent;
 import udk.android.reader.view.pdf.PDFViewListener;
 import udk.android.pdfeditorlib.dev.BuildConfig;
 import udk.android.reader.view.pdf.PDFViewListenerEx;
+import udk.android.reader.view.pdf.scrap.DrawingScrap;
+import udk.android.reader.view.pdf.scrap.Scrap;
 import udk.android.util.LogUtil;
+import udk.android.util.ThreadUtil;
 import udk.android.util.Workable;
 import udk.android.util.vo.menu.MenuCommand;
 import udk.android.util.vo.menu.ToolMenuCommand;
@@ -133,9 +142,9 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 				//LibConfiguration.DEBUGDRAW = true;
 				LibConfiguration.USER_LOG_LEVEL = LibConfiguration.USER_LOG_LEVEL_NONE;
 				LibConfiguration.USE_QUIZ = true;
-				LibConfiguration.USE_DOUBLE_PAGE_VIEWING = true;
-				LibConfiguration.DOUBLE_PAGE_VIEWING = true;
-				LibConfiguration.DOUBLE_PAGE_COVER_EXISTS = false;
+				//LibConfiguration.USE_DOUBLE_PAGE_VIEWING = true;
+				//LibConfiguration.DOUBLE_PAGE_VIEWING = true;
+				//LibConfiguration.DOUBLE_PAGE_COVER_EXISTS = false;
 
 				LibConfiguration.ZOOM_MAX = 16.0f;
 				LibConfiguration.ENABLE_USERACTION_DOUBLETAP = false;
@@ -144,6 +153,7 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 				LibConfiguration.ZOOM_MIN_DEFAULT_METHOD = LibConfiguration.ZOOM_MIN_DEFAULT_METHOD_AUTOFIT_IMAGEFULL;
 				LibConfiguration.CONTINUOUS_SCROLL_TYPE = LibConfiguration.CONTINUOUS_SCROLL_TYPE_NONE;
 				LibConfiguration.CONTINUOUS_SCROLL_SEAMLESS = true;
+				LibConfiguration.CONTINUOUS_SCROLL_PAGE_TERM = 100;
 				LibConfiguration.CONTINUOUS_SCROLL_PAGE_TERM_AUTO = true;
 				LibConfiguration.USE_ANNOTATION_EFFCET_CLOUDY = true;
 
@@ -211,12 +221,7 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 				LibConfiguration.BETA_FREEHAND_DRAWING_CALLBACK_IN_DOUBLEPAGE_VIEWING = true;
 
 				GlobalConfigurationService gs = GlobalConfigurationService.getInstance();
-				gs.setEbookMode(false);
-				gs.setContinuousScrollMode(1);
-				gs.setContinuousScrollAutoPageInterval(true);
 				gs.setCacheEnabled(false);
-				gs.setFittingMode(3);
-
 //				LibConfiguration.USE_TTS = true;
 			}//method
 		};
@@ -253,17 +258,34 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 			public void work( View tool ){
 
 				List< MenuCommand > mcs = new ArrayList< MenuCommand >();
+				mcs.add( new MenuCommand( "테스트", new Runnable(){
+					@Override
+					public void run(){
+						float y = pdfView.getPageHeight(pdfView.getPage(), pdfView.getZoom());
+						float screenheight= pdfView.getMeasuredHeight();
+						pdfView.pageScrollTo(0, screenheight-y);
+					}//method
+				} ) );
 				mcs.add( new MenuCommand( "테스트1 - create", new Runnable(){
 					@Override
 					public void run(){
 						//RectF rectF = pdfView.getPageBounds();
 						//pdfView.addAnnotationFreehandStart(true, rectF); // pageBounds에만 필기 주석 시작
 						//pdfView.addAnnotationTextBoxStart();
+						//pdfView.addAnnotationTypeWriterStart();
+						LibConfiguration.PALM_REJECTION = false;
+						LibConfiguration.PAGEMOVE_WITH_PALM_REJECTION = true;
 						pdfView.addAnnotationFreehandStart();
 						//pdfView.addAnnotationRectangleStart();
 						//pdfView.addAnnotationLineStart();
 						//pdfView.addAnnotationOvalStart();
 						//pdfView.addAnnotationPolygonStart(5);
+						//LibConfiguration.USE_TTS = true;
+						/*
+						pdfView.startReading();
+
+
+						 */
 					}//method
 				} ) );
 				mcs.add( new MenuCommand( "테스트1 - end", new Runnable(){
@@ -276,6 +298,15 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 							pdfView.addAnnotationFreehandEndCancel();
 						}
 
+/*
+						LibConfiguration.USE_SCRAP = true;
+						pdfView.addScrapStart(DrawingScrap.DrawingType.Free, new Workable<Scrap>() {
+							@Override
+							public void work(Scrap scrap) {
+								pdfView.scrap("/sdcard/aaa.png");
+							}
+						});
+ */
 					}//method
 				} ) );
 				mcs.add( new MenuCommand( "테스트1 - clear start", new Runnable(){
@@ -293,11 +324,14 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 				mcs.add( new MenuCommand( "테스트1 - flatten", new Runnable(){
 					@Override
 					public void run(){
+						/*
 						try {
 							pdfView.flatten();
 						} catch (PDFException e) {
 							e.printStackTrace();
 						}
+						 */
+
 					}//method
 				} ) );
 				mcs.add( new MenuCommand( "테스트2 - delete", new Runnable(){
@@ -323,14 +357,24 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 					@Override
 					public void run()
 					{
-						try {
-							StringWriter value = new StringWriter();
-							pdfView.exportXFDF(value);
-							byteXfdf = value.toString().getBytes(StandardCharsets.UTF_8);
+						new Thread(new Runnable() {
+							@Override
+							public void run() {
+								try {
+									Log.e("XXX", "export start");
+									StringWriter value = new StringWriter();
+									pdfView.exportXFDF(value);
+									Log.e("XXX", "export end");
+									String result = value.toString();
+									byteXfdf = result.getBytes(StandardCharsets.UTF_8);
 
-						} catch (Exception e ){
+								} catch (Exception e ){
+									Log.e("XXX", "export Exception");
+									e.printStackTrace();
+								}
 
-						}
+							}
+						}).start();
 
 					}//method
 				} ) );
@@ -338,18 +382,30 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 				mcs.add( new MenuCommand( "테스트4 - import", new Runnable(){
 					@Override
 					public void run(){
-						if( byteXfdf == null )
-							byteXfdf = readFromFile("/sdcard/test.xfdf");
+						new Thread(new Runnable() {
+							@Override
+							public void run() {
+								try {
+									if( byteXfdf == null )
+										byteXfdf = readFromFile("/sdcard/EB100000165.xfdf");
 
-						if( byteXfdf != null && byteXfdf.length > 0){
-							try {
-								pdfView.importXFDF(byteXfdf);
-							} catch (Exception e){
+									Log.e("XXX", "import start");
+									if( byteXfdf != null && byteXfdf.length > 0){
+										try {
+											pdfView.importXFDF(byteXfdf);
+										} catch (Exception e){
 
+										}
+
+										byteXfdf = null;
+									}
+									Log.e("XXX", "import Done");
+								} catch ( Exception ex ){
+									ex.printStackTrace();
+									Log.e("XXX", "import Exception");
+								}
 							}
-
-							byteXfdf = null;
-						}
+						}).start();
 
 					}
 				} ) );
@@ -466,6 +522,8 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 //			}
 //		});
 
+		setCallback();
+
 		if(Build.VERSION.SDK_INT >= 30){
 			if( !Environment.isExternalStorageManager() ) {
 				try {
@@ -519,7 +577,21 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 		return null;
 	}
 
-	private void openPDF() {
+	private void setCallback(){
+		pdfView.getInteractionService().setScrollListener(new InteractionScrollListener() {
+			@Override
+			public boolean onScrollStart(int page) {
+				Log.e("XXX","onScrollStart");
+				return false;
+			}
+
+			@Override
+			public boolean onScrollEnd(int page, boolean isMax) {
+				Log.e("XXX","onScrollEnd" + isMax);
+				return false;
+			}
+		});
+
 
 		pdfView.setPDFViewListener(new PDFViewListener() {
 			@Override
@@ -534,7 +606,7 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 
 			@Override
 			public void onPageChanged(PDFViewEvent e) {
-
+				pdfView.getAnimationService().startMove(0, -700f);
 			}
 
 			@Override
@@ -641,31 +713,30 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 			}
 		});
 		 */
-		pdfView.getAnnotationService().addListener(this);
-		pdfView.setContinuousAudioPlayMode(true);
 
-		try {
+		pdfView.setPDFReadingCallback(new PDFReadingService.PDFReadingCallback() {
+			@Override
+			public void onStart() {
 
+			}
 
+			@Override
+			public void onPause() {
 
-/*
-			ExtraOpenOptions eoos = new ExtraOpenOptions();
-			eoos.encryptedDrmParamExtraExtern = "token=" + Base64.encodeToString(strLoginToken.getBytes(), Base64.NO_WRAP);
-			eoos.encryptedDrmFileSavePath = getCacheDir().getAbsolutePath();
-*/
-			//pdfView.openPDF( "/sdcard/test/ezPDF Webviewer_매뉴얼.pdf", "abcd123!", "abcd123!", 0, 1, true, null );
-			///pdfView.openPDF("/sdcard/test/ezPDF Webviewer_매뉴얼.pdf", "abcd123!", "abcd123!", 1, 1, true, null, null);
-			pdfView.openPDF("/sdcard/sample.pdf", 1 );
+			}
 
-//			pdfView.openPDF(getAssets().open("C01_4.PDF"), 0);
-		} catch ( Exception e ){
+			@Override
+			public void onResume() {
 
-		}
-//		pdfView.openPDF( "http://stage.ibk.co.kr/fup/customer/form/2021121015525472454931559495957.pdf", 1 );
-		//pdfView.openPDF( "/sdcard/test/1334067_카티아 도움닫기.pdf", 1 );
-//		pdfView.openPDF( "https://manuals.info.apple.com/MANUALS/1000/MA1595/en_US/ipad_user_guide.pdf?filename=ipad_user_guide.pdf", 0 );
+			}
+
+			@Override
+			public void onEnd() {
+				Log.e("XXX", "onEnd");
+			}
+		});
+
 	}
-
 
 	@Override
 	public void onAnnotationTapped(AnnotationEvent e, MotionEvent me) {
@@ -736,5 +807,36 @@ public class TestQuiz extends TestBase implements AnnotationListener{
 		LogUtil.d( "pts" + callback.target.getPgPts() );
 		LogUtil.d( "old Bounds" + callback.oldBounds );
 		lastCallback = callback;
+	}
+
+	private void openPDF() {
+
+		try {
+/*
+			ExtraOpenOptions eoos = new ExtraOpenOptions();
+			eoos.encryptedDrmParamExtraExtern = "token=" + Base64.encodeToString(strLoginToken.getBytes(), Base64.NO_WRAP);
+			eoos.encryptedDrmFileSavePath = getCacheDir().getAbsolutePath();
+*/
+
+			String filePath = "/sdcard/yoonseo1407/ebook/pdf/EB100000165.pdf";
+			String key = "903A184BA1A24C918888897371B69519";
+			ExtraOpenOptions eoos = new ExtraOpenOptions();
+			eoos.autoDRMOpen = false;
+			// 주석 입력이 가능하려면 활성화 필요
+			eoos.forceCopy = true;
+			eoos.forceAddNotes = true;
+			eoos.encryptedDrmFileSavePath = filePath;
+			pdfView.openPDF(filePath, key, key, 1, 1f, true, eoos, null);
+			//pdfView.openPDF( "/sdcard/test/ezPDF Webviewer_매뉴얼.pdf", "abcd123!", "abcd123!", 0, 1, true, null );
+			///pdfView.openPDF("/sdcard/test/ezPDF Webviewer_매뉴얼.pdf", "abcd123!", "abcd123!", 1, 1, true, null, null);
+			//pdfView.openPDF("/sdcard/sample.pdf", 1 );
+
+			//pdfView.openPDF(getAssets().open("C01_4.PDF"), 0);
+		} catch ( Exception e ){
+
+		}
+//		pdfView.openPDF( "http://stage.ibk.co.kr/fup/customer/form/2021121015525472454931559495957.pdf", 1 );
+		//pdfView.openPDF( "/sdcard/test/1334067_카티아 도움닫기.pdf", 1 );
+//		pdfView.openPDF( "https://manuals.info.apple.com/MANUALS/1000/MA1595/en_US/ipad_user_guide.pdf?filename=ipad_user_guide.pdf", 0 );
 	}
 }//method
