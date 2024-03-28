@@ -25,6 +25,7 @@
         android:name="udk.android.editor.test.MainActivity"
         android:label="ezPDF Editor View Library"
         android:exported="true"
+        android:configChanges="keyboardHidden|orientation"
         android:windowSoftInputMode="adjustPan"
         >
         <intent-filter>
