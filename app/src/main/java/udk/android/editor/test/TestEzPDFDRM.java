@@ -12,6 +12,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import javax.net.ssl.HostnameVerifier;
@@ -298,10 +299,10 @@ public class TestEzPDFDRM extends TestBase{
 		
 		strInfo += "method=ezpdfeditor\n";
 		strInfo += "handshake=35\n";
-		strInfo += String.format("server=%s,\n", EZPDFEDITOR_DRM_SERVER_NAME);
-		strInfo += String.format("port=%d,\n", EZPDFEDITOR_DRM_SERVER_PORT);
-		strInfo += String.format("protocol=%s,\n", EZPDFEDITOR_DRM_SERVER_PROTOCOL >= 2 ? "https" : "http");
-		strInfo += String.format("getpk=%s,\n", EZPDFEDITOR_DRM_GETPK_NAME);
+		strInfo += String.format(Locale.ENGLISH, "server=%s,\n", EZPDFEDITOR_DRM_SERVER_NAME);
+		strInfo += String.format(Locale.ENGLISH, "port=%d,\n", EZPDFEDITOR_DRM_SERVER_PORT);
+		strInfo += String.format(Locale.ENGLISH, "protocol=%s,\n", EZPDFEDITOR_DRM_SERVER_PROTOCOL >= 2 ? "https" : "http");
+		strInfo += String.format(Locale.ENGLISH, "getpk=%s,\n", EZPDFEDITOR_DRM_GETPK_NAME);
 		strInfo += "open=3,/drm/ezpdfgetkey\n";
 
 		if (enablePrint)

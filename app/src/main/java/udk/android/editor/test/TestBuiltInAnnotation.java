@@ -11,7 +11,7 @@ import java.util.List;
 import udk.android.reader.env.LibConfiguration;
 import udk.android.reader.view.pdf.GlobalConfigurationService;
 import udk.android.reader.view.pdf.PDFView;
-import udk.android.pdfviewlib.R;
+import udk.android.reader.R;
 import udk.android.util.Workable;
 import udk.android.util.vo.menu.MenuCommand;
 import udk.android.widget.WidgetFactory;
