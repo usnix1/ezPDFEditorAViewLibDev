@@ -100,25 +100,25 @@ public class Test extends TestBase{
 		// 🔹 상단 버튼 코드로 생성
 		attachImportButton();
 		attachExportButton();
-		attachSmoothingToggleButtons();
-		attachLatencyView();
-		pdfView.setOnFreehandLatencyListener(new PDFView.OnFreehandLatencyListener() {
-			@Override
-			public void onFreehandInput(long eventTimeMs) {
-				lastFreehandInputTimeMs = eventTimeMs;
-			}
-
-			@Override
-			public void onFreehandRendered(long renderTimeMs, long latencyMs) {
-				lastFreehandLatencyMs = latencyMs;
-
-				runOnUiThread(() -> {
-					if (latencyTextView != null) {
-						latencyTextView.setText("Latency: " + latencyMs + " ms");
-					}
-				});
-			}
-		});
+//		attachSmoothingToggleButtons();
+//		attachLatencyView();
+//		pdfView.setOnFreehandLatencyListener(new PDFView.OnFreehandLatencyListener() {
+//			@Override
+//			public void onFreehandInput(long eventTimeMs) {
+//				lastFreehandInputTimeMs = eventTimeMs;
+//			}
+//
+//			@Override
+//			public void onFreehandRendered(long renderTimeMs, long latencyMs) {
+//				lastFreehandLatencyMs = latencyMs;
+//
+//				runOnUiThread(() -> {
+//					if (latencyTextView != null) {
+//						latencyTextView.setText("Latency: " + latencyMs + " ms");
+//					}
+//				});
+//			}
+//		});
 	}//method
 
 	/**
@@ -173,7 +173,7 @@ public class Test extends TestBase{
 		buttonSmoothOn.setLayoutParams(lpOn);
 
 		buttonSmoothOn.setOnClickListener(v -> {
-			pdfView.setFreehandSmoothingEnabled(true);
+//			pdfView.setFreehandSmoothingEnabled(true);
 
 			Toast.makeText(
 					this,
@@ -202,7 +202,7 @@ public class Test extends TestBase{
 		buttonSmoothOff.setLayoutParams(lpOff);
 
 		buttonSmoothOff.setOnClickListener(v -> {
-			pdfView.setFreehandSmoothingEnabled(false);
+//			pdfView.setFreehandSmoothingEnabled(false);
 
 			Toast.makeText(
 					this,
