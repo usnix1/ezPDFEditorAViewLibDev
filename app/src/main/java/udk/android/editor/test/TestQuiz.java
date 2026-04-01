@@ -49,6 +49,7 @@ import udk.android.reader.pdf.TextSearchEvent;
 import udk.android.reader.pdf.TextSearchListener;
 import udk.android.reader.pdf.TextSearchService;
 import udk.android.reader.pdf.WatermarkData;
+import udk.android.reader.pdf.annotation.AnnotationSettings;
 import udk.android.reader.pdf.annotation.FreeTextAnnotation;
 import udk.android.reader.pdf.annotation.ImageAnnotation;
 import udk.android.reader.pdf.annotation.Annotation;
@@ -243,7 +244,6 @@ public class TestQuiz extends TestBase {
 
 				LibConfiguration.USE_IMPORT_XFDF_WITH_SAX = true;
 
-				LibConfiguration.USE_SMART_NAVIGATION = true;
 
 				LibConfiguration.USE_ANNOTATION_SELECTION_CURSOR_QUAD = true;
 				LibConfiguration.ANNOTATION_SELECTION_HIGHLIGHT_DASH = true;
@@ -311,6 +311,16 @@ public class TestQuiz extends TestBase {
 				mcs.add( new MenuCommand( "테스트", new Runnable(){
 					@Override
 					public void run(){
+/*
+						Annotation a = (FreeTextAnnotation)fta;
+						AnnotationSettings settings = a.getAnnotationSettings();
+						settings.fontSize = 20;
+						settings.fontStyle = "normal";// italic, bold
+						settings.textRgb = Color.RED;
+						settings.innerRgb = Color.YELLOW;
+						settings.contents = "1234677";
+						pdfView.getAnnotationService().updateAnnotationSettings(a, settings, false );
+ */
 						//pdfView.addAnnotationImageStart("/sdcard/rend2.jpg");
 /*
 						RectF bounds = new RectF(200,200,500,500);
@@ -503,34 +513,46 @@ public class TestQuiz extends TestBase {
 						LibConfiguration.SCRAP_DRAWING_OTHER_PATH_EFFECT = null;//new float[]{ 10, 5 };
 						LibConfiguration.COLOR32_AREASELECTION_DRAWING_OTHER_STROKE =  0xFF314FB9;//Color.rgb(49,79,185);
 
+
+						 */
+						/*
 						pdfView.addScrapStart(DrawingScrap.DrawingType.Rectangle, new Workable<Scrap>() {
 							@Override
 							public void work(Scrap scrap) {
 								//pdfView.uiAddScrapEndConfirm("/sdcard/aaa.png", "/sdcard/aaa2.png", null);
 							}
-						});
+						});00.
 						 */
-						/*
+
 						LibConfiguration.ANNOTATION_CONTENTS_OPENTYPE = 4;
 						LibConfiguration.ANNOTATION_FREETEXT_BOUNDS_VERTICAL_EXPANDABLE = false;
 						LibConfiguration.USE_ANNOTATION_FREETEXT_AUTOFIT_WHEN_INVISIBLE = false;
+						LibConfiguration.ANNOTATION_TEXTBOX_FONT_STYLE = FreeTextAnnotation.FONT_STYLE_ITALIC;
+						LibConfiguration.ANNOTATION_TEXTBOX_FONT_WEIGHT = FreeTextAnnotation.FONT_WEIGHT_BOLD;
+						LibConfiguration.ANNOTATION_TEXTBOX_TEXT_DECORATION = FreeTextAnnotation.TEXT_DECORATION_UNDERLINE_N_STRIKE;
+						LibConfiguration.ANNOTATION_BORDERSTYLE = Annotation.BORDER_DASHED;
+						LibConfiguration.ANNOTATION_LINEDASHPATTERN = new double[]{3,1};
 						pdfView.addAnnotationTextBoxStart(new Workable<Annotation>() {
 							@Override
 							public void work(Annotation annotation) {
-								pdfView.getAnnotationService().select(annotation);
-								pdfView.editSelectedTextBoxContents();
-								//								pdfView.getExecForAnnotationEditTextBox( ( FreeTextAnnotation ) annotation ).run();
-							}
-						});
+								pdfView.post(new Runnable() {
+									@Override
+									public void run() {
+										pdfView.getAnnotationService().select(annotation);
+										pdfView.editSelectedTextBoxContents();
+									}
+								});
 
-						 */
+								//pdfView.getExecForAnnotationEditTextBox( ( FreeTextAnnotation ) annotation ).run();
+							}
+						}, true);
 
 					}//method
 				} ) );
 				mcs.add( new MenuCommand( "테스트1 - create", new Runnable(){
 					@Override
 					public void run(){
-						count = 10;
+						count = -1;
 
 						switch (count){
 							case 0:
@@ -568,6 +590,7 @@ public class TestQuiz extends TestBase {
 								LibConfiguration.ANNOTATION_COLOR_TEXT_TEXTBOX = 0xFF0000FF;
 								LibConfiguration.ANNOTATION_COLOR_TEXTBOX_INNER_EXISTS = true;
 								LibConfiguration.ANNOTATION_COLOR_TEXTBOX_INNER = 0xFF00FF00;
+
 								pdfView.addAnnotationTextBoxStart();
 								break;
 							case 9:
@@ -618,21 +641,21 @@ public class TestQuiz extends TestBase {
 
 
  */
-/*
+
+						/*
 						LibConfiguration.ANNOTATION_CREATE_FREEHAND_LINE_METHOD = InkAnnotationUserData.METHOD.end;
 						InkAnnotationUserData userData = new InkAnnotationUserData();
 						userData.type = InkAnnotationUserData.STYLE.tape;
-						LibConfiguration.ANNOTATION_COLOR_FREEHAND = Color.parseColor("#FFF17A95");
-						LibConfiguration.ANNOTATION_COLOR_FREEHAND_INNER = Color.parseColor("#FFF17A95");
-						LibConfiguration.ANNOTATION_BORDERWIDTH_FREEHAND = 20f;
+//						LibConfiguration.ANNOTATION_COLOR_FREEHAND = Color.parseColor("#FFF17A95");
+//						LibConfiguration.ANNOTATION_COLOR_FREEHAND_INNER = Color.parseColor("#ccF17A95");
+						LibConfiguration.ANNOTATION_BORDERWIDTH_FREEHAND = 100f;
 						LibConfiguration.ANNOTATION_CREATE_FREEHAND_TAPE_STROKE_WIDTH = 2f;
 						//LibConfiguration.ANNOTATION_CREATE_FREEHAND_TAPE_STROKE_INNER_ALPHA_WHEN_HIDDEN = 200;
 //						LibConfiguration.ANNOTATION_CREATE_FREEHAND_TAPE_STROKE_OUTTER_ALPHA_WHEN_HIDDEN = 100;
 						LibConfiguration.ANNOTATION_BORDERSTYLE = Annotation.BORDER_DASHED;
 						LibConfiguration.ANNOTATION_LINEDASHPATTERN = new double[]{3,1};
 						pdfView.addAnnotationFreehandStart(userData);
-
- */
+						 */
 						//pdfView.addAnnotationRectangleStart();
 						//pdfView.addAnnotationLineStart();
 						//pdfView.addAnnotationOvalStart();`
@@ -713,11 +736,13 @@ public class TestQuiz extends TestBase {
 						LibConfiguration.ANNOTATION_BORDERSTYLE = Annotation.BORDER_SOLID;//Annotation.BORDER_DASHED;
 						//LibConfiguration.ANNOTATION_LINEDASHPATTERN = new double[]{1,3};
 						LibConfiguration.ANNOTATION_BORDERWIDTH_POLYGON = 40;
-						LibConfiguration.ANNOTATION_BORDERWIDTH_FIGURE = 40;
+						LibConfiguration.ANNOTATION_BORDERWIDTH_FIGURE = 100;
 						LibConfiguration.ANNOTATION_COLOR_FIGURE_INNER_EXISTS = false;
 						//pdfView.addAnnotationRectangleStart();
-						pdfView.addAnnotationPolygonStart(3);
+						//pdfView.addAnnotationPolygonStart(3);
+						pdfView.addAnnotationOvalStartContinuous(true);
 						//pdfView.addAnnotationCloudyOvalStart();
+
 					}//method
 				} ) );
 				mcs.add( new MenuCommand( "테스트1 - end", new Runnable(){
@@ -752,7 +777,7 @@ public class TestQuiz extends TestBase {
 						List< Class< ? extends Annotation > > includeOnly  = new ArrayList<>();
 						includeOnly.add( InkAnnotation.class );
 
-						pdfView.clearAnnotationStart(null, includeOnly);
+						pdfView.clearAnnotationStart(null, null);//includeOnly);
 					}//method
 				} ) );
 				mcs.add( new MenuCommand( "테스트1 - clear end", new Runnable(){
@@ -1548,7 +1573,7 @@ public class TestQuiz extends TestBase {
 
 			@Override
 			public void onAnnotationUpdated(AnnotationEvent e) {
-
+				Log.e("XXXX", "======== onAnnotationUpdated: " + ( e.current!= null?e.current.getRefNo():"Null"));
 			}
 
 			@Override
@@ -1625,6 +1650,11 @@ public class TestQuiz extends TestBase {
 
 			@Override
 			public void onClearDragEnd(boolean byStylus, MotionEvent e) {
+
+			}
+
+			@Override
+			public void onClearDragStop() {
 
 			}
 		});
@@ -1759,7 +1789,9 @@ public class TestQuiz extends TestBase {
 			//pdfView.openPDF("/sdcard/이펙티브 타입스크립트.pdf", 1 );
 			//pdfView.openPDF("/sdcard/저가 매수의 기술.pdf", 2);
 			//pdfView.openPDF("/sdcard/2027학년도 수능특강(생명과학1)본문_test.pdf", 1 );
-			pdfView.openPDF("/sdcard/pdf_magenta_white_dot.pdf", 1 );
+			//pdfView.openPDF("/sdcard/pdf_magenta_white_dot.pdf", 1 );
+			//pdfView.openPDF("/sdcard/56b4d7a4347c4c4fa97a3065d3823cdb.pdf", 1 );
+			pdfView.openPDF("/sdcard/yissue260323.pdf", 132);
 
 
 			/*
