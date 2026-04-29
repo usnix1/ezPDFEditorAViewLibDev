@@ -137,6 +137,7 @@ public class Test extends TestBase{
 		attachImportButton();
 		attachExportButton();
 		attachZoomButtons();
+		attachInputModeButtons();
 		attachUndoRedoButtons();
 		attachUndoRedoListener();
 //		attachSmoothingToggleButtons();
@@ -372,6 +373,50 @@ public class Test extends TestBase{
 		zoomOutButton.setLayoutParams(lpOut);
 		zoomOutButton.setOnClickListener(v -> runWhenPdfReady(() -> adjustZoom(1.0f / TEST_ZOOM_STEP)));
 		root.addView(zoomOutButton);
+	}
+
+	private void attachInputModeButtons() {
+		ViewGroup root = findViewById(android.R.id.content);
+
+		Button freehandButton = new Button(this);
+		freehandButton.setText("Freehand");
+
+		FrameLayout.LayoutParams lpFreehand = new FrameLayout.LayoutParams(
+				ViewGroup.LayoutParams.WRAP_CONTENT,
+				ViewGroup.LayoutParams.WRAP_CONTENT
+		);
+		lpFreehand.gravity = Gravity.TOP | Gravity.END;
+		lpFreehand.topMargin = dp(156);
+		lpFreehand.rightMargin = dp(120);
+		freehandButton.setLayoutParams(lpFreehand);
+		freehandButton.setOnClickListener(v -> runWhenPdfReady(this::activateFreehandMode));
+		root.addView(freehandButton);
+
+		Button eraserButton = new Button(this);
+		eraserButton.setText("Eraser");
+
+		FrameLayout.LayoutParams lpEraser = new FrameLayout.LayoutParams(
+				ViewGroup.LayoutParams.WRAP_CONTENT,
+				ViewGroup.LayoutParams.WRAP_CONTENT
+		);
+		lpEraser.gravity = Gravity.TOP | Gravity.END;
+		lpEraser.topMargin = dp(156);
+		lpEraser.rightMargin = dp(12);
+		eraserButton.setLayoutParams(lpEraser);
+		eraserButton.setOnClickListener(v -> runWhenPdfReady(this::activateEraserMode));
+		root.addView(eraserButton);
+	}
+
+	private void activateFreehandMode() {
+		if (!pdfView.okToAddNotes()) {
+			Toast.makeText(this, "Freehand not allowed", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		pdfView.addAnnotationFreehandStart();
+	}
+
+	private void activateEraserMode() {
+		pdfView.clearAnnotationStart();
 	}
 
 	private void attachUndoRedoButtons() {
